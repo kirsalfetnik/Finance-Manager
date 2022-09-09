@@ -31,6 +31,21 @@ const getMonth = async (req, res) => {
 const createMonth = async (req, res) => {
     const {name, year, sum, details} = req.body
 
+    let emptyFields = []
+
+    if (!name) {
+        emptyFields.push('name')
+    }
+    if (!year) {
+        emptyFields.push('year')
+    }
+    if (!sum) {
+        emptyFields.push('sum')
+    }
+    if (emptyFields.length > 0) {
+        return res.status(400).json({ error: 'Please fill in all the fields', emptyFields })
+    }
+
     // add a document to database
     try{
         const month = await Month.create({name, year, sum, details})

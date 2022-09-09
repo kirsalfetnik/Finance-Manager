@@ -1,7 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useMonthsContext } from '../hooks/useMonthsContext';
+
+// components
+import MonthDetails from '../components/MonthDetails'
+import MonthForm from '../components/MonthForm'
 
 const Home = () => {
-    const [months, setMonths] = useState(null)
+    const { months, dispatch } = useMonthsContext() 
 
     useEffect(() => {
         const fetchMonths = async () => {
@@ -9,20 +14,21 @@ const Home = () => {
             const json = await response.json()
 
             if (response.ok) {
-                setMonths(json)
+                dispatch({type: 'SET_MONTHS', payload: json})
             }
         }
 
         fetchMonths()
-    }, [])
+    }, [dispatch])
 
     return (
         <div className="home">
             <div className="months">
                 {months && months.map((month) => (
-                    <p key={month._id}>{month.name}</p>
+                    <MonthDetails key={month._id} month={month} />
                 ))}
             </div>
+            <MonthForm />
         </div>
     )
 }
